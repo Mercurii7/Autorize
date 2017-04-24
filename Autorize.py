@@ -1067,7 +1067,7 @@ class BurpExtender(IBurpExtender, ITab, IHttpListener, IMessageEditorController,
         headers = requestInfo.getHeaders()
         if removeOrNot:
             headers = list(headers)
-            removeHeaders = self.replaceString.getText()
+            removeHeaders = "\r\n".join(self.replaceString.getText().splitlines()) # Convert \n to \r\n for use with Windows
 
             # Headers must be entered line by line i.e. each header in a new
             # line
@@ -1079,7 +1079,7 @@ class BurpExtender(IBurpExtender, ITab, IHttpListener, IMessageEditorController,
                         headers.remove(header)
 
             if authorizeOrNot:
-                headers.append(self.replaceString.getText())
+                headers.append("\r\n".join(self.replaceString.getText().splitlines())) # Convert \n to \r\n for use with Windows
 
         msgBody = messageInfo.getRequest()[requestInfo.getBodyOffset():]
         return self._helpers.buildHttpMessage(headers, msgBody)
